@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +29,10 @@ import com.springboot.main.library.service.CustomerService;
 
 @RestController
 @RequestMapping("/customerBook")
-@CrossOrigin(origins=("http://localhost:3000"))
+@CrossOrigin("*")
 public class CustomerBookController {
+	@Autowired
+	private Logger logger;
 	@Autowired
 	private CustomerService customerService;
 	@Autowired
@@ -71,7 +74,7 @@ public class CustomerBookController {
 			customerBook. setAmount(amount1);
 			
 			 customerBook=customerBookService.createCustomerBook(customerBook);
-			
+			 logger.info("successfully posted");
 			 return ResponseEntity.ok().body(customerBook);
 			
 		} catch (InvalidIdException e) {
@@ -174,6 +177,7 @@ public class CustomerBookController {
 	           	            System.out.println(customerBook.getAmount());
 	            customerBookService.createCustomerBook(customerBook);
 	        }
+	        logger.info("successfully posted");
 	        return ResponseEntity.ok().body(customerBookDto);
 	    } catch (Exception e) {
 	        System.out.println(e.getMessage());

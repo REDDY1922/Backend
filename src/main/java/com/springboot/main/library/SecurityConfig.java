@@ -1,11 +1,11 @@
 package com.springboot.main.library;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,44 +18,53 @@ import com.springboot.main.library.service.UserService;
 @SuppressWarnings("deprecation")
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
+	@Bean
+	public Logger getLogger() {
+		return LoggerFactory.getLogger("Log Records");
+	}
+	
 
 	@Autowired
-	private UserService userService; 
+	private UserService userService;
+	
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		 //tell spring to go to user table in the db and read username/password
+	protected void configure(AuthenticationManagerBuilder auth)throws Exception{
+		System.out.println("configure...called");
 		auth.authenticationProvider(getProvider());
 	}
 	
-	private AuthenticationProvider getProvider() {
-		DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
-		//also, I want spring to know that I have encrypted password in the db
-		dao.setPasswordEncoder(getEncoder());
-		//from here.. i want spring to go to my database and fetch users. 
-		dao.setUserDetailsService(userService);  //UserDetailsService : UserService
-		return dao; 
-		 
-	}
-
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		 http.authorizeRequests()
-		 .antMatchers("/admin/getone/{id}","/auth/login").permitAll()
-		 .antMatchers(HttpMethod.POST,"/auth/login").authenticated()
-		 .anyRequest().permitAll()
-		 .and().httpBasic()
-		 .and().cors().disable()
-		 .csrf().disable();
+	protected void configure(HttpSecurity http)throws Exception{
+		
+		http
+		.authorizeRequests()
+		.antMatchers("/Book/add/{id}","/Book/update/{id}","/auth/login","/Book/delete/{bid}","/customer/post",
+				"/admin/delete/{id}","/admin/update/{id}","/category/getall","/customer/getallcategory","/admin/add",
+				"/Book/all/{id}","/Book/all","/customer/getone/{bookTile}","/customer/getall","/customerBook/getall","/customerBook/customerid/{cid}",
+				"/Book/update/{bid}/{id}","/customerBook/{cid}/{bid}","/customer/getbycategoryid","/user/login",
+				"/Book/getbybook/{bid}","/Book/getwithauthdesc","/Book/getwithbookdesc","customerBook/bookid/{bid}","/customerBook/create/{customerId}").permitAll()
+		 .antMatchers(HttpMethod.POST,"/user/login").authenticated()
+		.anyRequest().authenticated()
+		.and().httpBasic()
+		.and()
+		.csrf().disable()
+		.cors().disable();
 	}
 	
 	@Bean
 	public PasswordEncoder getEncoder() {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
+		return new BCryptPasswordEncoder();
 	}
-	@Bean
-	public Logger getLogger() {
-		return org.slf4j.LoggerFactory.getLogger("Log Records");
+	
+	public DaoAuthenticationProvider getProvider() {
+		System.out.println("getprovider...called");
+		DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
+		dao.setPasswordEncoder(getEncoder());
+		dao.setUserDetailsService(userService);
+		
+		return dao;
 	}
+	
+	
 	
 }

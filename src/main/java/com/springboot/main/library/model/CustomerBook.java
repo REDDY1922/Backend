@@ -55,6 +55,11 @@ public class CustomerBook {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+	@Override
+	public String toString() {
+		return "CustomerBook [id=" + id + ", issueDate=" + issueDate + ", returnDate=" + returnDate + ", amount="
+				+ amount + ", book=" + book + ", customer=" + customer + "]";
+	}
 	
 	
 }

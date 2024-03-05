@@ -31,7 +31,7 @@ import com.springboot.main.library.service.CategoryService;
 
 @RestController
 @RequestMapping("/Book")
-@CrossOrigin(origins=("http://localhost:3000"))
+@CrossOrigin("*")
 public class BookController {
 	
 	@Autowired
@@ -42,22 +42,22 @@ public class BookController {
 	private CategoryService categoryService;
 	@Autowired
 	private Logger logger;
-	@PostMapping("/add/{id}/{caid}")
-	public ResponseEntity<?> postBook(@RequestBody Book book,
-						    @PathVariable("id") int id,@PathVariable("caid") int caid) {
-		try {
-			Admin admin = adminService.getOne(id);
-			book.setAdmin(admin);
-			Category category=categoryService.getById(caid);
-			book.setCategory(category);
-			/* Save the product in the DB */
-			book = bookService.postBook(book); 
-			logger.info("Book posted Successfully");
-			return ResponseEntity.ok().body(book);
-		} catch (InvalidIdException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
+//	@PostMapping("/add/{id}/{caid}")
+//	public ResponseEntity<?> postBook(@RequestBody Book book,
+//						    @PathVariable("id") int id,@PathVariable("caid") int caid) {
+//		try {
+//			Admin admin = adminService.getOne(id);
+//			book.setAdmin(admin);
+//			Category category=categoryService.getById(caid);
+//			book.setCategory(category);
+//			/* Save the product in the DB */
+//			book = bookService.postBook(book); 
+//			logger.info("Book posted Successfully");
+//			return ResponseEntity.ok().body(book);
+//		} catch (InvalidIdException e) {
+//			return ResponseEntity.badRequest().body(e.getMessage());
+//		}
+//	}
 	//@PostMapping("/add/{id}")
 	//public ResponseEntity<?> postBook(@RequestBody BookDto bookdto,
 						  //  @PathVariable("id") int id) {
@@ -88,8 +88,110 @@ public class BookController {
 		//}
 	//}
 	
-	
+//	@PostMapping("/add/{id}")
+//
+//	public ResponseEntity<?> postBook(@RequestBody BookDto bookdto,
+//
+//			@PathVariable("id") int id) {
+//
+//		/* Fetch admin object from db using id */
+//
+//		try {
+//
+//			Admin admin = adminService.getOne(id);
+//
+//			/* Attach vendor to product */
+//
+//			Category category = bookdto.getCategory();
+//
+//			String type = category.getName();
+//
+//			Category category1 = categoryService.getbyname(type);
+//
+//			Book book = new Book();
+//
+//			book.setAdmin(admin);
+//
+//			book.setCategory(category);
+//
+//			book.setAuthor(bookdto.getAuthor());
+//
+//			book.setAuthorDesc(bookdto.getAuthorDesc());
+//
+//			book.setBookDesc(bookdto.getBookDesc());
+//
+//			book.setBookPrice(bookdto.getBookPrice());
+//
+//			book.setBookTitle(bookdto.getBookTitle());
+//
+//			book.setRating(bookdto.getRating());
+//
+//			book.setIsbn(bookdto.getIsbn());
+//
+//			book.setNoOfCopies(bookdto.getNoOfCopies());
+//
+//			book.setCategory(category1);
+//
+//			book = bookService.postBook(book);
+//
+//			logger.info("successfully posted");
+//
+//			return ResponseEntity.ok().body(book);
+//
+//		} catch (InvalidIdException e) {
+//
+//			return ResponseEntity.badRequest().body(e.getMessage());
+//
+//		}
+//
+//	}
+	@PostMapping("/add/{id}")
+	public ResponseEntity<?> postBook(@RequestBody BookDto bookdto, @PathVariable("id") int id) {
+	    try {
+	        Admin admin = adminService.getOne(id);
 
+	        if (admin == null) {
+	            return ResponseEntity.badRequest().body("Admin not found with id: " + id);
+	        }
+
+	        Category category = bookdto.getCategory();
+
+	        if (category == null) {
+	            return ResponseEntity.badRequest().body("Category cannot be null");
+	        }
+
+	        String categoryName = category.getName();
+
+	        Category fetchedCategory = categoryService.getbyname(categoryName);
+
+	        if (fetchedCategory == null) {
+	            return ResponseEntity.badRequest().body("Category not found with name: " + categoryName);
+	        }
+
+	        Book book = new Book();
+	        book.setAdmin(admin);
+	        book.setCategory(category);
+	        book.setAuthor(bookdto.getAuthor());
+	        book.setAuthorDesc(bookdto.getAuthorDesc());
+	        book.setBookDesc(bookdto.getBookDesc());
+	        book.setBookPrice(bookdto.getBookPrice());
+	        book.setBookTitle(bookdto.getBookTitle());
+	        book.setRating(bookdto.getRating());
+	        book.setIsbn(bookdto.getIsbn());
+	        book.setNoOfCopies(bookdto.getNoOfCopies());
+	        book.setCategory(fetchedCategory);
+
+	        book = bookService.postBook(book);
+
+	        logger.info("Successfully posted a book");
+	        return ResponseEntity.ok().body(book);
+
+	    } catch (InvalidIdException e) {
+	        return ResponseEntity.badRequest().body(e.getMessage());
+	    }
+	}
+
+	
 
 	@GetMapping("/all")
 	public List<Book> getAllBook(
@@ -200,7 +302,7 @@ public class BookController {
 			if(newBook.getBookPrice() != 0)
 				oldBook.setBookPrice(newBook.getBookPrice());
 			oldBook = bookService.postBook(oldBook); 
-			
+			 logger.info("updated status of bookTitle"+oldBook.getBookTitle()+"to"+newBook.getBookTitle());
 			return ResponseEntity.ok().body(oldBook);
 
 		} catch (InvalidIdException e) {

@@ -11,7 +11,12 @@ public class BookDto {
     private String bookDesc;
     private String authorDesc;
 	private double bookPrice;
+	private Category category;
 	
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 	public String getBookTitle() {
 		return bookTitle;
 	}
@@ -84,8 +89,9 @@ public class BookDto {
 	}
 
 	public Category getCategory() {
-		// TODO Auto-generated method stub
-		return null;
+
+		return category;
+
 	}
 	
 

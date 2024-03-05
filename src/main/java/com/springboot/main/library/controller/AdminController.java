@@ -29,7 +29,7 @@ import com.springboot.main.library.service.UserService;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin(origins=("http://localhost:3000"))
+@CrossOrigin("*")
 public class AdminController {
 	
 	@Autowired
@@ -48,7 +48,7 @@ public class AdminController {
 		String passwordPlain = user.getPassword();
 		String encodedPassword = passwordEncoder.encode(passwordPlain);
 		user.setPassword(encodedPassword);
-		user.setRole(RoleType.ADMIN);
+		user.setRole("Admin");
 		user = userService.insert(user);
 		admin.setUser(user);
 		admin = adminService.postAdmin(admin);

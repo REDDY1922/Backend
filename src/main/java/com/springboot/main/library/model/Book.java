@@ -88,10 +88,19 @@ public class Book {
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
 	}
-	
+	public Category getCategory() {
+		return category;
+	}
 	
 	public void setCategory(Category category) {
 		// TODO Auto-generated method stub
 		this.category=category;
 	}
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", bookTitle=" + bookTitle + ", author=" + author + ", rating=" + rating + ", isbn="
+				+ isbn + ", bookDesc=" + bookDesc + ", authorDesc=" + authorDesc + ", bookPrice=" + bookPrice
+				+ ", noOfCopies=" + noOfCopies + ", admin=" + admin + ", category=" + category + "]";
+	}
+	
 }

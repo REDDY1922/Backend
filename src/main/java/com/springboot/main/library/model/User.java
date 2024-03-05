@@ -29,8 +29,7 @@ public class User implements UserDetails{
 	@Column(nullable = false)
 	private String password;
 	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private RoleType role;
+	private String role;
 	public int getId() {
 		return id;
 	}
@@ -50,10 +49,10 @@ public class User implements UserDetails{
 		this.password = password;
 	}
 	
-	public RoleType getRole() {
+	public String getRole() {
 		return role;
 	}
-	public void setRole(RoleType role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 	@Override

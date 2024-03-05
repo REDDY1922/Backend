@@ -19,7 +19,7 @@ import com.springboot.main.library.service.CategoryService;
 
 @RestController
 @RequestMapping("/category")
-@CrossOrigin(origins=("http://localhost:3000"))
+@CrossOrigin("*")
 public class CategoryController {
 	
 	@Autowired

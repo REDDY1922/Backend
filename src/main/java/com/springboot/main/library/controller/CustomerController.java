@@ -28,7 +28,7 @@ import com.springboot.main.library.service.BookService;
 import com.springboot.main.library.service.CustomerService;
 import com.springboot.main.library.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
@@ -51,7 +51,7 @@ public class CustomerController {
 		String passwordPlain = user.getPassword();
 		String encodedPassword = passwordEncoder.encode(passwordPlain);
 		user.setPassword(encodedPassword);
-		user.setRole(RoleType.CUSTOMER);
+		user.setRole("CUSTOMER");
 		user = userService.insert(user);
 		customer.setUser(user);
 		customer=customerService.postCustomer(customer);
