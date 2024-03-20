@@ -29,15 +29,14 @@ import com.springboot.main.library.service.UserService;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin("*")
+@CrossOrigin(origins=("http://localhost:3000"))
 public class AdminController {
-	
+	@Autowired
+	private Logger logger;
 	@Autowired
 	private AdminService adminService;
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private Logger logger;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -52,7 +51,7 @@ public class AdminController {
 		user = userService.insert(user);
 		admin.setUser(user);
 		admin = adminService.postAdmin(admin);
-		logger.info("Admin Successfully posted");
+		 logger.info("successfully posted");
 		return admin;
 	}
 
@@ -73,7 +72,7 @@ public class AdminController {
 		}
 
 	}
-	// localhost:8118/admin/getall?page=2&size=2
+	// localhost:8182/admin/getall?page=2&size=2
 
 	@GetMapping("/getall") /// admin/getall?page=0&size=10
 	public List<Admin> getAll(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -110,6 +109,7 @@ public class AdminController {
 				oldAdmin.setName(newAdmin.getName());
 
 			oldAdmin = adminService.postAdmin(oldAdmin);
+			 logger.info("successfully updated");
 			return ResponseEntity.ok().body(oldAdmin);
 
 		} catch (InvalidIdException e) {

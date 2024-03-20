@@ -23,292 +23,303 @@ import com.springboot.main.library.exception.InvalidIdException;
 import com.springboot.main.library.model.Admin;
 import com.springboot.main.library.model.Book;
 import com.springboot.main.library.model.Category;
+import com.springboot.main.library.model.Customer;
 import com.springboot.main.library.service.AdminService;
 import com.springboot.main.library.service.BookService;
 import com.springboot.main.library.service.CategoryService;
 
-
-
 @RestController
+
 @RequestMapping("/Book")
-@CrossOrigin("*")
+
+@CrossOrigin(origins = ("http://localhost:3000"))
+
 public class BookController {
-	
+
 	@Autowired
-	private AdminService adminService;
-	@Autowired
-	private BookService bookService;
-	@Autowired
-	private CategoryService categoryService;
-	@Autowired
+
 	private Logger logger;
-//	@PostMapping("/add/{id}/{caid}")
-//	public ResponseEntity<?> postBook(@RequestBody Book book,
-//						    @PathVariable("id") int id,@PathVariable("caid") int caid) {
-//		try {
-//			Admin admin = adminService.getOne(id);
-//			book.setAdmin(admin);
-//			Category category=categoryService.getById(caid);
-//			book.setCategory(category);
-//			/* Save the product in the DB */
-//			book = bookService.postBook(book); 
-//			logger.info("Book posted Successfully");
-//			return ResponseEntity.ok().body(book);
-//		} catch (InvalidIdException e) {
-//			return ResponseEntity.badRequest().body(e.getMessage());
-//		}
-//	}
-	//@PostMapping("/add/{id}")
-	//public ResponseEntity<?> postBook(@RequestBody BookDto bookdto,
-						  //  @PathVariable("id") int id) {
-			/* Fetch vendor object from db using id */
-		//try {
-			
-		
-			//Admin admin = adminService.getOne(id);
-			/* Attach vendor to product */
-//			Category category =categoryService.getbyName(bookdto.getCategory()) ;
-			//Book book =new Book();
-			
-			//book.setAdmin(admin);
-//			book.setCategory(category);
-			//book.setAuthor(bookdto.getAuthor());
-			//book.setAuthorDesc(bookdto.getAuthor());
-			//book.setBookDesc(bookdto.getBookDesc());
-			//book.setBookPrice(bookdto.getBookPrice());
-			//book.setBookTitle(bookdto.getBookTitle());
-			//book.setRating(bookdto.getRating());
-			//book.setIsbn(bookdto.getIsbn());
-			//book.setNoOfCopies(bookdto.getNoOfCopies());
-			/* Save the product in the DB */
-			//book = bookService.postBook(book);
-			//return ResponseEntity.ok().body(book);
-		//} catch (InvalidIdException e) {
-		//	return ResponseEntity.badRequest().body(e.getMessage());
-		//}
-	//}
-	
-//	@PostMapping("/add/{id}")
-//
-//	public ResponseEntity<?> postBook(@RequestBody BookDto bookdto,
-//
-//			@PathVariable("id") int id) {
-//
-//		/* Fetch admin object from db using id */
-//
-//		try {
-//
-//			Admin admin = adminService.getOne(id);
-//
-//			/* Attach vendor to product */
-//
-//			Category category = bookdto.getCategory();
-//
-//			String type = category.getName();
-//
-//			Category category1 = categoryService.getbyname(type);
-//
-//			Book book = new Book();
-//
-//			book.setAdmin(admin);
-//
-//			book.setCategory(category);
-//
-//			book.setAuthor(bookdto.getAuthor());
-//
-//			book.setAuthorDesc(bookdto.getAuthorDesc());
-//
-//			book.setBookDesc(bookdto.getBookDesc());
-//
-//			book.setBookPrice(bookdto.getBookPrice());
-//
-//			book.setBookTitle(bookdto.getBookTitle());
-//
-//			book.setRating(bookdto.getRating());
-//
-//			book.setIsbn(bookdto.getIsbn());
-//
-//			book.setNoOfCopies(bookdto.getNoOfCopies());
-//
-//			book.setCategory(category1);
-//
-//			book = bookService.postBook(book);
-//
-//			logger.info("successfully posted");
-//
-//			return ResponseEntity.ok().body(book);
-//
-//		} catch (InvalidIdException e) {
-//
-//			return ResponseEntity.badRequest().body(e.getMessage());
-//
-//		}
-//
-//	}
+
+	@Autowired
+
+	private AdminService adminService;
+
+	@Autowired
+
+	private BookService bookService;
+
+	@Autowired
+
+	private CategoryService categoryService;
+
 	@PostMapping("/add/{id}")
-	public ResponseEntity<?> postBook(@RequestBody BookDto bookdto, @PathVariable("id") int id) {
-	    try {
-	        Admin admin = adminService.getOne(id);
 
-	        if (admin == null) {
-	            return ResponseEntity.badRequest().body("Admin not found with id: " + id);
-	        }
+	public ResponseEntity<?> postBook(@RequestBody BookDto bookdto,
 
-	        Category category = bookdto.getCategory();
+			@PathVariable("id") int id) {
 
-	        if (category == null) {
-	            return ResponseEntity.badRequest().body("Category cannot be null");
-	        }
+		/* Fetch vendor object from db using id */
 
-	        String categoryName = category.getName();
+		try {
 
-	        Category fetchedCategory = categoryService.getbyname(categoryName);
+			Admin admin = adminService.getOne(id);
 
-	        if (fetchedCategory == null) {
-	            return ResponseEntity.badRequest().body("Category not found with name: " + categoryName);
-	        }
+			/* Attach vendor to product */
 
-	        Book book = new Book();
-	        book.setAdmin(admin);
-	        book.setCategory(category);
-	        book.setAuthor(bookdto.getAuthor());
-	        book.setAuthorDesc(bookdto.getAuthorDesc());
-	        book.setBookDesc(bookdto.getBookDesc());
-	        book.setBookPrice(bookdto.getBookPrice());
-	        book.setBookTitle(bookdto.getBookTitle());
-	        book.setRating(bookdto.getRating());
-	        book.setIsbn(bookdto.getIsbn());
-	        book.setNoOfCopies(bookdto.getNoOfCopies());
-	        book.setCategory(fetchedCategory);
+			Category category = bookdto.getCategory();
 
-	        book = bookService.postBook(book);
+			String type = category.getName();
 
-	        logger.info("Successfully posted a book");
-	        return ResponseEntity.ok().body(book);
+			Category category1 = categoryService.getbyname(type);
 
-	    } catch (InvalidIdException e) {
-	        return ResponseEntity.badRequest().body(e.getMessage());
-	    }
+			Book book = new Book();
+
+			book.setAdmin(admin);
+
+			book.setCategory(category);
+
+			book.setAuthor(bookdto.getAuthor());
+
+			book.setAuthorDesc(bookdto.getAuthorDesc());
+
+			book.setBookDesc(bookdto.getBookDesc());
+
+			book.setBookPrice(bookdto.getBookPrice());
+
+			book.setBookTitle(bookdto.getBookTitle());
+
+			book.setRating(bookdto.getRating());
+
+			book.setIsbn(bookdto.getIsbn());
+
+			book.setNoOfCopies(bookdto.getNoOfCopies());
+
+			book.setCategory(category1);
+
+			book = bookService.postBook(book);
+
+			logger.info("successfully posted");
+
+			return ResponseEntity.ok().body(book);
+
+		} catch (InvalidIdException e) {
+
+			return ResponseEntity.badRequest().body(e.getMessage());
+
+		}
+
 	}
 
-	
+// @PostMapping("/add/{catid}/{id}")
+
+// public ResponseEntity<?> postBook(@RequestBody Book book,@PathVariable("catid") int catid,
+
+//    @PathVariable("id") int id) {
+
+// /* Fetch vendor object from db using id */
+
+// try {
+
+// Category category=categoryService.getOne(catid);
+
+// book.setCategory(category);
+
+//
+
+// Admin admin = adminService.getOne(id);
+
+// /* Attach vendor to product */
+
+// book.setAdmin(admin);
+
+// /* Save the product in the DB */
+
+// book = bookService.postBook(book);
+
+// return ResponseEntity.ok().body(book);
+
+// } catch (InvalidIdException e) {
+
+// return ResponseEntity.badRequest().body(e.getMessage());
+
+// }
+
+// }
 
 	@GetMapping("/all")
+
 	public List<Book> getAllBook(
-			@RequestParam(value="page",required = false,defaultValue = "0") Integer page,
-			@RequestParam(value="size",required = false,defaultValue = "1000000") Integer size) {  
-		
-		Pageable pageable =  PageRequest.of(page, size);
+
+			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+
+			@RequestParam(value = "size", required = false, defaultValue = "1000000") Integer size) {
+
+		Pageable pageable = PageRequest.of(page, size);
+
 		return bookService.getAllBook(pageable);
+
 	}
+
 	@GetMapping("/getbybook/{bid}")
+
 	public ResponseEntity<?> getBookByBookid(@PathVariable("bid") int bid) {
-	    try {
-	        
-	        Book book = bookService.getOne(bid);
-	        return ResponseEntity.ok().body(book);
-	    } catch (NumberFormatException | InvalidIdException e) {
-	        return ResponseEntity.badRequest().body(e.getMessage());
-	    }
+
+		try {
+
+			Book book = bookService.getOne(bid);
+
+			return ResponseEntity.ok().body(book);
+
+		} catch (NumberFormatException | InvalidIdException e) {
+
+			return ResponseEntity.badRequest().body(e.getMessage());
+
+		}
+
 	}
-	
+
 	@GetMapping("/getwithauthdesc")
-		public List<Book> getwithauthdesc(@RequestParam int id){
-		
+
+	public List<Book> getwithauthdesc(@RequestParam int id) {
+
 		return bookService.findwithauthdesc(id);
+
 	}
+
 	@GetMapping("/getwithbookdesc")
-	public List<Book> getwithbookdesc(@RequestParam int id){
-	
-	return bookService.findwithbookdesc(id);
-}
 
-	/*fetch book by Admin id*/
+	public List<Book> getwithbookdesc(@RequestParam int id) {
+
+		return bookService.findwithbookdesc(id);
+
+	}
+
+	/* fetch book by Admin id */
+
 	@GetMapping("/all/{id}")
+
 	public ResponseEntity<?> getbookByAdmin(@PathVariable("id") int id) {
+
 		try {
-			
+
 			Admin admin = adminService.getOne(id);
-			List<Book> list= bookService.getbookByAdmin(id);
+
+			List<Book> list = bookService.getbookByAdmin(id);
+
 			return ResponseEntity.ok().body(list);
+
 		} catch (InvalidIdException e) {
+
 			return ResponseEntity.badRequest().body(e.getMessage());
 
 		}
+
 	}
-	/*fetch book by category id*/
-	@GetMapping("/category/all/{caid}")
-	public ResponseEntity<?> getBooksByCategory(@PathVariable("caid") int caid,
-			@RequestParam(value="page",required = false,defaultValue = "0") Integer page,
-			@RequestParam(value="size",required = false,defaultValue = "1000000") Integer size) {
-		try {
-			@SuppressWarnings("unused")
-			Category category=categoryService.getById(caid);
-			Pageable pageable=PageRequest.of(page, size);
-			List<Book> list=bookService.getBooksByCategory(caid,pageable);
-			return ResponseEntity.ok().body(list);
-		} catch (InvalidIdException e) {
-			// TODO Auto-generated catch block
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
-	/*Delete book by admin*/
+
+	/* Delete book by admin */
+
 	@DeleteMapping("/delete/{bid}/{id}")
-	public ResponseEntity<?> deleteBook(@PathVariable("id") int id,@PathVariable("bid") int bid) {
-		
+
+	public ResponseEntity<?> deleteBook(@PathVariable("id") int id, @PathVariable("bid") int bid) {
+
 		try {
-			//validate id
+
+//validate id
+
 			Admin admin = adminService.getOne(id);
-			Book book=bookService.getOne(bid);
-			//delete
+
+			Book book = bookService.getOne(bid);
+
+//delete
+
 			bookService.deleteBook(book);
+
 			return ResponseEntity.ok().body("Book Deleted Successfully");
 
 		} catch (InvalidIdException e) {
+
 			return ResponseEntity.badRequest().body(e.getMessage());
+
 		}
+
 	}
+
 	@DeleteMapping("/delete/{bid}")
+
 	public ResponseEntity<?> deleteBook(@PathVariable("bid") int bid) throws InvalidIdException {
-		// validate id
+
+// validate id
+
 		Book book = bookService.getOne(bid);
-		// delete
+
+// delete
+
 		bookService.deleteBookById(bid);
+
 		return ResponseEntity.ok().body("Book deleted successfully");
+
 	}
-	@PutMapping("/update/{bid}")  //:update: which record to update?   give me new value for update
+
+	@PutMapping("/update/{bid}") // :update: which record to update? give me new value for update
+
 	public ResponseEntity<?> updateBook(@PathVariable("bid") int bid,
-							@RequestBody BookDto newBook) {
+
+			@RequestBody BookDto newBook) {
+
 		try {
-			//validate id
-			
-			Book oldBook=bookService.getOne(bid);
-			if(newBook.getBookTitle() != null)
+
+//validate id
+
+			Book oldBook = bookService.getOne(bid);
+
+			if (newBook.getBookTitle() != null)
+
 				oldBook.setBookTitle(newBook.getBookTitle());
-			if(newBook.getAuthor() != null)
+
+			if (newBook.getAuthor() != null)
+
 				oldBook.setAuthor(newBook.getAuthor());
-			if(newBook.getCategory() != null)
+
+			if (newBook.getCategory() != null)
+
 				oldBook.setCategory(newBook.getCategory());
-			if(newBook.getRating()!=0)
+
+			if (newBook.getRating() != 0)
+
 				oldBook.setRating(newBook.getRating());
-			if(newBook.getNoOfCopies()!=null)
+
+			if (newBook.getNoOfCopies() != null)
+
 				oldBook.setNoOfCopies(newBook.getNoOfCopies());
-			if(newBook.getBookDesc()!=null)
+
+			if (newBook.getBookDesc() != null)
+
 				oldBook.setBookDesc(newBook.getBookDesc());
-			if(newBook.getAuthorDesc()!=null)
+
+			if (newBook.getAuthorDesc() != null)
+
 				oldBook.setAuthorDesc(newBook.getAuthorDesc());
-			if(newBook.getIsbn() != null)
+
+			if (newBook.getIsbn() != null)
+
 				oldBook.setIsbn(newBook.getIsbn());
-			if(newBook.getBookPrice() != 0)
+
+			if (newBook.getBookPrice() != 0)
+
 				oldBook.setBookPrice(newBook.getBookPrice());
-			oldBook = bookService.postBook(oldBook); 
-			 logger.info("updated status of bookTitle"+oldBook.getBookTitle()+"to"+newBook.getBookTitle());
+
+			oldBook = bookService.postBook(oldBook);
+
+			logger.info("updated status of bookTitle" + oldBook.getBookTitle() + "to" + newBook.getBookTitle());
+
 			return ResponseEntity.ok().body(oldBook);
 
 		} catch (InvalidIdException e) {
+
 			return ResponseEntity.badRequest().body(e.getMessage());
+
 		}
-	
-		
-}
+
+	}
+
 }

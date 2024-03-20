@@ -32,6 +32,13 @@ public class AuthController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private CustomerBookService customerBookService;
+
     
     @PostMapping("/user/login")
     public User login(Principal principal) {
@@ -64,5 +71,4 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
     }
-
 }

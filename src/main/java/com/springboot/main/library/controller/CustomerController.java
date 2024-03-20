@@ -32,13 +32,13 @@ import com.springboot.main.library.service.UserService;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
-	
+	@Autowired
+	private Logger logger;
 	@Autowired
 	private CustomerService customerService;
 	@Autowired
 	private BookService bookService;
-	@Autowired
-	private Logger logger;
+
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -52,11 +52,12 @@ public class CustomerController {
 		String encodedPassword = passwordEncoder.encode(passwordPlain);
 		user.setPassword(encodedPassword);
 		user.setRole("CUSTOMER");
+
 		user = userService.insert(user);
 		customer.setUser(user);
-		customer=customerService.postCustomer(customer);
-		logger.info("customer added successfully");
-		return customer;
+		 logger.info("successfully posted");
+		return customerService.postCustomer(customer);
+
 	}
 
 	/* Get customer */
@@ -94,7 +95,9 @@ public class CustomerController {
 			oldCustomer.setName(newCustomer.getName());
 		if (newCustomer.getEmail() != null)
 			oldCustomer.setEmail(newCustomer.getEmail());
+
 		oldCustomer = customerService.postCustomer(oldCustomer);
+		logger.info("successfully updated");
 		return ResponseEntity.ok().body(oldCustomer);
 	}
 
@@ -104,6 +107,16 @@ public class CustomerController {
 		return book;
 
 	}
+	
+	/* localhost:8182/customer/getbook/The Uncharted Path
+	@GetMapping("/getauthor/{author}")
+	public Book getAuthor(@PathVariable("author") String author) {
+		Book book = bookService.getAuthor(author);
+		return book;
+
+	}
+ */
+	
 	
 	
 	@GetMapping("/get/{id}")
@@ -127,5 +140,7 @@ public class CustomerController {
 		return bookService.findByAuthor(author);
 		
 	}
+	
+
 	
 }

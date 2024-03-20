@@ -45,6 +45,11 @@ public class CategoryService {
 		return optional.get();
 		}
 
+	public Category getbyName(String category) {
+		// TODO Auto-generated method stub
+		return categoryRepository.getbyname(category);
+	}
+
 	
 
 	

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ import com.springboot.main.library.service.CustomerService;
 
 @RestController
 @RequestMapping("/customerBook")
-@CrossOrigin("*")
+@CrossOrigin(origins=("http://localhost:3000"))
 public class CustomerBookController {
 	@Autowired
 	private Logger logger;
@@ -118,9 +119,26 @@ public class CustomerBookController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 			
 		}
-
 	}	
-
+//	@GetMapping("/customerid/{cid}")
+//	public ResponseEntity<?> getBooks(@PathVariable("cid") String cid) {
+//	    try {
+//	        // Parse the cid parameter to an integer
+//	        int customerId = Integer.parseInt(cid);
+//	        
+//	        // Retrieve customer information
+//	        Customer customer = customerService.getOne(customerId);
+//	        
+//	        // Return the previous orders for the customer
+//	        return ResponseEntity.ok().body(customerBookService.getbooks(customerId));
+//	    } catch (NumberFormatException e) {
+//	        // Handle the case where cid cannot be parsed as an integer
+//	        return ResponseEntity.badRequest().body("Invalid customer ID: " + cid);
+//	    } catch (InvalidIdException e) {
+//	        // Handle the case where the customer ID is invalid
+//	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//	    }
+//	}
 	@GetMapping("/all/{cbid}")
 	public ResponseEntity<?> getbookByStatus(@PathVariable("cbid") int cbid) {
 		try {
